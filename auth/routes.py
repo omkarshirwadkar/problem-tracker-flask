@@ -53,7 +53,8 @@ def signup():
             return render_template("signup.html")
 
         session["pending_signup_email"] = email
-        flash("OTP sent to your email. Verify to complete signup.", "info")
+        # flash("OTP sent to your email. Verify to complete signup.", "info")
+        flash("OTP generation is currently disabled. Account created for testing.", "info")
         return redirect(url_for("auth.verify_signup_otp"))
 
     return render_template("signup.html")
@@ -105,7 +106,8 @@ def login():
         otp = create_email_otp(email=user.email, purpose="login", user_id=user.id)
         send_otp_email(user.email, otp, "login")
         session["pending_login_email"] = user.email
-        flash("OTP sent to your email. Verify to login.", "info")
+        # flash("OTP sent to your email. Verify to login.", "info")
+        flash("OTP generation is currently disabled. Login allowed for testing.", "info")
         return redirect(url_for("auth.verify_login_otp"))
     return render_template("login.html")
 

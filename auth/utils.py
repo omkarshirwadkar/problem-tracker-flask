@@ -26,12 +26,13 @@ def create_email_otp(email: str, purpose: str, user_id=None, minutes: int = 10) 
     return otp
 
 def send_otp_email(email: str, otp: str, purpose: str):
-    msg = Message(
-        subject=f"{purpose.title()} OTP Verification",
-        recipients=[email],
-        body=f"Your OTP for {purpose} is: {otp}\nIt expires in 10 minutes."
-    )
-    mail.send(msg)
+    # msg = Message(
+    #     subject=f"{purpose.title()} OTP Verification",
+    #     recipients=[email],
+    #     body=f"Your OTP for {purpose} is: {otp}\nIt expires in 10 minutes."
+    # )
+    # mail.send(msg)
+    return
 
 def create_reset_token(user_id: int, minutes: int = 30) -> str:
     token = secrets.token_urlsafe(32)
@@ -45,10 +46,11 @@ def create_reset_token(user_id: int, minutes: int = 30) -> str:
     return token
 
 def send_reset_email(email: str, token: str):
-    reset_link = url_for("auth.reset_password", token=token, _external=True)
-    msg = Message(
-        subject="Password Reset",
-        recipients=[email],
-        body=f"Use this link to reset your password:\n{reset_link}\nThis link expires in 30 minutes."
-    )
-    mail.send(msg)
+    # reset_link = url_for("auth.reset_password", token=token, _external=True)
+    # msg = Message(
+    #     subject="Password Reset",
+    #     recipients=[email],
+    #     body=f"Use this link to reset your password:\n{reset_link}\nThis link expires in 30 minutes."
+    # )
+    # mail.send(msg)
+    return
