@@ -22,7 +22,7 @@ def create_email_otp(email: str, purpose: str, user_id=None, minutes: int = 10) 
         expires_at=datetime.utcnow() + timedelta(minutes=minutes),
     )
     db.session.add(record)
-    db.session.commit()
+    db.session.flush()
     return otp
 
 def send_otp_email(email: str, otp: str, purpose: str):

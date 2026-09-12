@@ -14,32 +14,48 @@ auth_bp = Blueprint("auth", __name__)
 def signup():
     if current_user.is_authenticated:
         return redirect(url_for("home"))
+
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
         confirm_password = request.form.get("confirm_password", "")
+
         if not username or not email or not password:
             flash("All fields are required.", "danger")
             return render_template("signup.html")
+
         if password != confirm_password:
             flash("Passwords do not match.", "danger")
             return render_template("signup.html")
+
         existing = User.query.filter(
-            (func.lower(User.username) == username.lower()) | (func.lower(User.email) == email.lower())
+            (func.lower(User.username) == username.lower()) |
+            (func.lower(User.email) == email.lower())
         ).first()
+
         if existing:
             flash("Username or email already exists.", "danger")
             return render_template("signup.html")
+
         user = User(username=username, email=email, is_verified=False)
         user.set_password(password)
         db.session.add(user)
-        db.session.commit()
-        otp = create_email_otp(email=email, purpose="signup", user_id=user.id)
-        send_otp_email(email, otp, "signup")
+
+        try:
+            db.session.flush()  # get user.id without committing yet
+            otp = create_email_otp(email=email, purpose="signup", user_id=user.id)
+            send_otp_email(email, otp, "signup")
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            flash("Could not send OTP email. Please try again.", "danger")
+            return render_template("signup.html")
+
         session["pending_signup_email"] = email
         flash("OTP sent to your email. Verify to complete signup.", "info")
         return redirect(url_for("auth.verify_signup_otp"))
+
     return render_template("signup.html")
 
 @auth_bp.route("/verify-signup-otp", methods=["GET", "POST"])

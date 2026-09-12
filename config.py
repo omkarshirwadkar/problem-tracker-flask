@@ -18,3 +18,4 @@ class Config:
 
     SESSION_COOKIE_HTTPONLY = True
     REMEMBER_COOKIE_HTTPONLY = True
+    MAIL_TIMEOUT = int(os.getenv("MAIL_TIMEOUT", "10"))
