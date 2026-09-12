@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>Manage Solved Problems</h2>
+
+  <form method="get">
+    <label>Search your solved problems</label>
+    <input name="q" value="{{ q }}" placeholder="Search by title, problem number, or category">
+    <button class="btn" type="submit">Search</button>
+    <a class="btn secondary" href="{{ url_for('problems.manage_problems') }}">Clear Search</a>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Clear Data</h3>
+  <form method="post" action="{{ url_for('problems.clear_solved_problems') }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to clear all solved problems?');">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="btn danger" type="submit">Clear Problem List</button>
+  </form>
+
+  <form method="post" action="{{ url_for('problems.clear_all_categories') }}" style="display:inline; margin-left:10px;" onsubmit="return confirm('Are you sure you want to clear all categories?');">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="btn danger" type="submit">Clear All Categories</button>
+  </form>
+</div>
+
+{% if current_user.is_authenticated and current_user.is_admin %}
+<div class="card">
+  <h3>Admin Actions</h3>
+
+  <form method="post" action="{{ url_for('problems.load_problems_once_route') }}" style="display:inline;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="btn" type="submit">Load Problems Once</button>
+  </form>
+
+  <form method="post" action="{{ url_for('problems.sync_problems_route') }}" style="display:inline; margin-left:10px;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="btn secondary" type="submit">Sync Problems</button>
+  </form>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>Saved Problems</h2>
+
+  {% if solved_problems %}
+    {% for p in solved_problems %}
+      <div class="card" style="box-shadow:none; border:1px solid #e5e7eb;">
+        <strong>#{{ p.problem_number }} — {{ p.title }}</strong><br>
+        Categories:
+        {% if p.categories %}
+          {% for c in p.categories %}
+            <span class="pill">{{ c }}</span>
+          {% endfor %}
+        {% else %}
+          <span class="pill">Uncategorized</span>
+        {% endif %}
+        <br><br>
+
+        <a class="btn" href="{{ url_for('problems.edit_solved_problem', user_problem_id=p.user_problem_id) }}">Edit Tags</a>
+
+        <form method="post" action="{{ url_for('problems.delete_solved_problem', user_problem_id=p.user_problem_id) }}" style="display:inline;" onsubmit="return confirm('Delete this solved problem?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn danger" type="submit">Delete</button>
+        </form>
+
+        <a class="btn secondary" href="{{ p.link }}" target="_blank">Open Problem</a>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No solved problems found. Omkar</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>Verify OTP ({{ purpose }})</h2>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Enter 6-digit OTP</label>
+    <input name="otp" maxlength="6" required>
+    <button class="btn" type="submit">Verify</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h1>Problem Tracker</h1>
+  <p>Track solved problems, categorize them, and practice them by category.</p>
+
+  {% if current_user.is_authenticated %}
+    <p>Welcome, <strong>{{ current_user.username }}</strong>.</p>
+    <p>
+      <a class="btn" href="{{ url_for('problems.add_problems') }}">Add Problems</a>
+      <a class="btn secondary" href="{{ url_for('problems.solve_problems') }}">Solve Problems</a>
+    </p>
+  {% else %}
+    <p>
+      <a class="btn" href="{{ url_for('auth.login') }}">Login</a>
+      <a class="btn secondary" href="{{ url_for('auth.signup') }}">Sign Up</a>
+    </p>
+    <p>Guests can only access this home page and auth pages.</p>
+  {% endif %}
+</div>
+{% endblock %}

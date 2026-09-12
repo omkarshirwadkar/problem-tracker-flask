@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>Add Solved Problem</h2>
+
+  {% if not confirm %}
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="action" value="fetch">
+
+      <label>Problem Number</label>
+      <input name="problem_number" placeholder="e.g. 1" required>
+
+      <button class="btn" type="submit">Fetch Problem</button>
+    </form>
+  {% else %}
+    <p>
+      <strong>Problem found:</strong>
+      #{{ problem.leetcode_problem_id }} — {{ problem.title }}
+    </p>
+
+    <p>
+      <a href="{{ problem.link }}" target="_blank">Open problem</a>
+    </p>
+
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="action" value="save">
+      <input type="hidden" name="problem_id" value="{{ problem.id }}">
+      <input type="hidden" name="problem_number" value="{{ problem.leetcode_problem_id }}">
+
+      <p><strong>Do you want to add problem {{ problem.leetcode_problem_id }} in any of these categories?</strong></p>
+
+      <label>Select Existing Categories (optional)</label>
+      {% for category in categories %}
+        <div>
+          <input type="checkbox" name="categories" value="{{ category.name }}" id="cat{{ category.id }}">
+          <label for="cat{{ category.id }}">{{ category.name }}</label>
+        </div>
+      {% endfor %}
+
+      <label>Custom Category (optional)</label>
+      <input name="custom_category" placeholder="e.g. DP, Graphs, Revision">
+
+      <button class="btn" type="submit">Save Problem</button>
+      <a class="btn secondary" href="{{ url_for('problems.add_problems') }}">Cancel</a>
+    </form>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>Your Solved Problems</h2>
+  {% if solved %}
+    <ul>
+      {% for item in solved %}
+        <li>
+          #{{ item.Problem.leetcode_problem_id }} — {{ item.Problem.title }}
+          <a href="{{ item.Problem.link }}" target="_blank">Open</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No solved problems yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

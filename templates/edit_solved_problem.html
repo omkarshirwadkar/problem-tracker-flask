@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>Edit Tags</h2>
+
+  <p>
+    <strong>#{{ problem.leetcode_problem_id }} — {{ problem.title }}</strong><br>
+    <a href="{{ problem.link }}" target="_blank">Open Problem</a>
+  </p>
+
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Existing categories</label>
+    {% for category in categories %}
+      <div>
+        <input type="checkbox" name="categories" value="{{ category.name }}" id="cat{{ category.id }}"
+          {% if category.name in current_categories %}checked{% endif %}>
+        <label for="cat{{ category.id }}">{{ category.name }}</label>
+      </div>
+    {% endfor %}
+
+    <label>Custom Category</label>
+    <input name="custom_category" placeholder="Add a new category">
+
+    <button class="btn" type="submit">Save Tags</button>
+    <a class="btn secondary" href="{{ url_for('problems.manage_problems') }}">Back</a>
+  </form>
+
+  <p style="margin-top:12px;">
+    Current tags:
+    {% if current_categories %}
+      {% for c in current_categories %}
+        <span class="pill">{{ c }}</span>
+      {% endfor %}
+    {% else %}
+      <span class="pill">Uncategorized</span>
+    {% endif %}
+  </p>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or "Problem Tracker" }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 16px 24px; }
+    header a { color: white; margin-right: 14px; text-decoration: none; }
+    main { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+    .btn { display: inline-block; padding: 10px 16px; background: #2563eb; color: white; text-decoration: none; border: 0; border-radius: 8px; cursor: pointer; }
+    .btn.secondary { background: #6b7280; }
+    input, select { width: 100%; padding: 10px; margin: 6px 0 12px; box-sizing: border-box; border: 1px solid #d1d5db; border-radius: 8px; }
+    label { font-weight: bold; }
+    .flash { padding: 10px 12px; margin-bottom: 12px; border-radius: 8px; }
+    .flash.success { background: #dcfce7; }
+    .flash.danger { background: #fee2e2; }
+    .flash.info { background: #dbeafe; }
+    ul { padding-left: 18px; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="{{ url_for('home') }}">Home</a>
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('problems.add_problems') }}">Add Problems</a>
+      <a href="{{ url_for('problems.solve_problems') }}">Solve Problems</a>
+      <a href="{{ url_for('problems.manage_problems') }}">Manage Problems</a>
+      <a href="{{ url_for('auth.logout') }}">Logout</a>
+    {% else %}
+      <a href="{{ url_for('auth.login') }}">Login</a>
+      <a href="{{ url_for('auth.signup') }}">Sign Up</a>
+    {% endif %}
+  </header>
+
+  <main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

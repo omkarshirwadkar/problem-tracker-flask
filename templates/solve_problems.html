@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>Solve Problems</h2>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Select categories (leave empty for any random solved problem)</label>
+    {% for category in categories %}
+      <div>
+        <input type="checkbox" name="category_ids" value="{{ category.id }}" id="solvecat{{ category.id }}">
+        <label for="solvecat{{ category.id }}">{{ category.name }}</label>
+      </div>
+    {% endfor %}
+    <button class="btn" type="submit">Get Random Problems</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Selected Problems</h2>
+  {% if selected_problems %}
+    {% for p in selected_problems %}
+      <div class="card" style="box-shadow:none; border:1px solid #e5e7eb;">
+        <strong>#{{ p.problem_number }} — {{ p.title }}</strong><br>
+        Category: {{ p.category }}<br>
+        <a href="{{ p.link }}" target="_blank">Open Problem</a>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No problems selected yet.</p>
+  {% endif %}
+</div>
+{% endblock %}
