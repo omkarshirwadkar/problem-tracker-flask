@@ -91,24 +91,36 @@ def verify_signup_otp():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("home"))
+
     if request.method == "POST":
         identifier = request.form.get("identifier", "").strip()
         password = request.form.get("password", "")
+
         user = User.query.filter(
-            (func.lower(User.username) == identifier.lower()) | (func.lower(User.email) == identifier.lower())
+            (func.lower(User.username) == identifier.lower()) |
+            (func.lower(User.email) == identifier.lower())
         ).first()
+
         if not user or not user.check_password(password):
             flash("Invalid credentials.", "danger")
             return render_template("login.html")
+
         if not user.is_verified:
             flash("Please verify your account first.", "danger")
             return render_template("login.html")
-        otp = create_email_otp(email=user.email, purpose="login", user_id=user.id)
-        send_otp_email(user.email, otp, "login")
+
+        try:
+            otp = create_email_otp(email=user.email, purpose="login", user_id=user.id)
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            flash("Could not create login OTP. Please try again.", "danger")
+            return render_template("login.html")
+
         session["pending_login_email"] = user.email
-        # flash("OTP sent to your email. Verify to login.", "info")
-        flash("OTP generation is currently disabled. Login allowed for testing.", "info")
+        flash("OTP generated. Enter the code to login.", "info")
         return redirect(url_for("auth.verify_login_otp"))
+
     return render_template("login.html")
 
 @auth_bp.route("/verify-login-otp", methods=["GET", "POST"])

@@ -14,13 +14,7 @@ def generate_otp() -> str:
     return "123123"
 
 def create_email_otp(email: str, purpose: str, user_id=None, minutes: int = 10) -> str:
-    # otp = generate_otp()
-    if purpose == "login":
-        otp = "321321"
-    elif purpose == "signup":
-        otp = "123123"
-    else:
-        otp = "231231"
+    otp = generate_otp()
     record = EmailOTP(
         email=email,
         user_id=user_id,
