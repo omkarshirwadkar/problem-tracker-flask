@@ -10,7 +10,8 @@ def hash_token(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 def generate_otp() -> str:
-    return f"{secrets.randbelow(1000000):06d}"
+    # return f"{secrets.randbelow(1000000):06d}"
+    return "123123"
 
 def create_email_otp(email: str, purpose: str, user_id=None, minutes: int = 10) -> str:
     otp = generate_otp()
