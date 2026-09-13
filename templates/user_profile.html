@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>{{ user.username }}'s Solved Problems</h2>
+  <p>Email: {{ user.email }}</p>
+</div>
+
+<div class="card">
+  {% if solved_problems %}
+    {% for p in solved_problems %}
+      <div class="card" style="box-shadow:none; border:1px solid #e5e7eb;">
+        <strong>#{{ p.problem_number }} — {{ p.title }}</strong><br>
+        Categories:
+        {% if p.categories %}
+          {% for c in p.categories %}
+            <span class="pill">{{ c }}</span>
+          {% endfor %}
+        {% else %}
+          <span class="pill">Uncategorized</span>
+        {% endif %}
+        <br><br>
+        <a class="btn secondary" href="{{ p.link }}" target="_blank">Open Problem</a>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>This user has not added any solved problems yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

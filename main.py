@@ -4,6 +4,7 @@ from config import Config
 from extensions import db, migrate, login_manager, mail, csrf, limiter
 from auth.routes import auth_bp
 from problems.routes import problems_bp
+from community.routes import community_bp
 from problems.sync import incremental_sync_from_current_size
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -27,6 +28,7 @@ def create_app():
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(problems_bp)
+    app.register_blueprint(community_bp)
 
     @app.before_request
     def restrict_guest_access():
