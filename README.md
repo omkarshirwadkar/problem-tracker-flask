@@ -394,8 +394,8 @@ Sensitive routes are rate limited to reduce abuse:
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/<your-username>/<your-repo>.git
-cd <your-repo>
+git clone https://github.com/omkarshirwadkar/problem-tracker-flask.git
+cd problem-tracker-flask
 ```
 
 ### 2. Create and activate a virtual environment

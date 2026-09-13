@@ -50,7 +50,7 @@ def add_problems():
                 flash("Enter a valid problem number.", "danger")
                 return render_template("add_problems.html", categories=categories, problem=None, confirm=False)
 
-            problem = Problem.query.filter_by(leetcode_problem_id=int(problem_number)).first()
+            problem = Problem.query.filter_by(id=int(problem_number)).first()
             if not problem:
                 flash("Problem not found in database.", "danger")
                 return render_template("add_problems.html", categories=categories, problem=None, confirm=False)
